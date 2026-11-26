@@ -244,6 +244,23 @@ Build the Leaflet/OpenStreetMap multi-city risk map, colored markers, popups,
 coordinates, and legend without implying that point observations are a regional
 heat map.
 
+- **10.1 Render the interactive base map** — completed. Added a lazy-loaded
+  Leaflet/OpenStreetMap map centered on eight initial Indian city locations.
+- **10.2 Connect current weather and risk markers** — completed. Markers use
+  API-provided current Heat Index risk; per-city loading/errors and refresh are
+  handled independently. Search can add locations and users can remove them
+  (maximum 12 at once).
+- **10.3 Add map interactions and responsive details** — completed. Added
+  risk-colored markers, accessible popups with temperature/risk/coordinates,
+  selectable city summaries, selected-location details, a risk legend, and
+  explicit point-data and informational disclaimers.
+- **10.4 Verify live behavior and layout** — completed. Verified all eight
+  initial city requests, map markers/tiles/popups, selecting a city, searching
+  and adding/removing a city, mobile layout, and frontend lint/build.
+
+**Phase 10 — Interactive Map: complete.** The map renders discrete current
+city observations only; it does not interpolate risk across regions.
+
 ## Phase 11 — Historical Analytics
 
 Build city filtering, historical charts and records, pagination, and verify
@@ -276,9 +293,9 @@ documentation; provide a final report based only on verified results.
 
 ## Incremental delivery rule
 
-Complete one small step per user `NEXT` command. After each step, verify the
-work, update `PROGRESS.md` and this roadmap, report results, and wait. Do not
-begin the next step automatically.
+Complete one phase per user `NEXT` command. After each phase, verify the work,
+update `PROGRESS.md` and this roadmap, report results, and wait. Do not begin
+the next phase automatically.
 
 ## Phase status
 
@@ -292,4 +309,5 @@ begin the next step automatically.
 - Phase 7 — React Initialization: **complete**.
 - Phase 8 — Dashboard UI: **complete**.
 - Phase 9 — Forecast Module: **complete**.
-- Phases 10–16: **not started**.
+- Phase 10 — Interactive Map: **complete**.
+- Phases 11–16: **not started**.

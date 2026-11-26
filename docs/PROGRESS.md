@@ -2,9 +2,9 @@
 
 ## Current position
 
-- **Current phase:** Phase 9 — Forecast Module
-- **Current step:** Phase 9 complete; Phase 10 — Interactive Map is next
-- **Status:** Phases 0–9 complete
+- **Current phase:** Phase 10 — Interactive Map
+- **Current step:** Phase 10 complete; Phase 11 — Historical Analytics is next
+- **Status:** Phases 0–10 complete
 
 ## Completed
 
@@ -277,6 +277,22 @@
   temperature on a shared Celsius scale; risk categories remain separate and
   are not plotted on that temperature scale. Forecast data remains
   informational and read-only.
+- **Phase 10, Steps 10.1–10.3:** Replaced the map placeholder with a
+  lazy-loaded Leaflet/OpenStreetMap city map. Added eight initial Indian
+  locations, API-backed current temperature and Heat Index risk markers,
+  independent per-location loading/error states, refresh, geocoding search to
+  add a city, and removal of user-added locations (maximum 12). Marker
+  popups include current temperature, applicable risk, and coordinates; a
+  selectable city list and details panel, risk counts/legend, and responsive
+  layout complete the screen. Added accessible search labels and prominent
+  point-data/informational disclaimers.
+- **Phase 10, Step 10.4:** Verified all eight live current-weather requests,
+  markers, OpenStreetMap tiles, popup values, city selection, search/add/remove
+  flow, and narrow-screen layout without horizontal overflow. `npm run lint`
+  and `npm run build` passed.
+- **Phase 10 complete:** Risk colors represent individual city observations
+  returned by the existing API. The map does not spatially interpolate values
+  or imply regional coverage.
 
 ## Pending
 
@@ -290,7 +306,8 @@
 - Phase 7: complete (steps 7.1–7.3).
 - Phase 8: complete (steps 8.1–8.4).
 - Phase 9: complete (steps 9.1–9.4).
-- Phases 10–16: not started.
+- Phase 10: complete (steps 10.1–10.4).
+- Phases 11–16: not started.
 
 ## Verification
 
@@ -343,6 +360,10 @@
   test verified forecast load, hourly risk strip, daily outlook, city search,
   14-day selection, 24-hour pagination, empty danger periods, and responsive
   mobile layout without horizontal overflow.
+- Phase 10: `npm run lint` passed; `npm run build` passed; live browser smoke
+  test verified eight city observations, map tiles and markers, popup details,
+  city selection, geocoding/add/remove flow, and mobile layout without
+  horizontal overflow.
 - **Checks passed:** Backend directory existence and empty-file checks;
   virtual-environment interpreter and pip checks; installed dependency
   version checks; `pip check`; Django system check; Python syntax compilation;
@@ -371,11 +392,10 @@
   confirmed when implemented and tested.
 - `backend/.env` contains a locally generated development-only secret and
   `DJANGO_DEBUG=true`; never share or commit it. The `.env.example` template
-  intentionally contains no secret. Git status confirmed the local env file
-  is not included in the Phase 9 changes.
+  intentionally contains no secret. The local env file is not tracked.
 - The project SQLite database now contains the applied Django and Phase 2
   migrations; it is local and ignored by `.gitignore`.
 
 ## Next recommended action
 
-On the next authorized phase, begin Phase 10 — Interactive Map.
+On the next authorized phase, begin Phase 11 — Historical Analytics.

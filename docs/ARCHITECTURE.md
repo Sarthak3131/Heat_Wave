@@ -3,9 +3,9 @@
 ## Status and scope
 
 This document records the intended architecture and implementation status
-through Phase 9. Backend provider, Heat Index, API, alert, shared frontend
-shell, live dashboard, and forecast screens are implemented; other feature
-screens remain planned until their phases are completed.
+through Phase 10. Backend provider, Heat Index, API, alert, shared frontend
+shell, live dashboard, forecast, and interactive city map are implemented;
+other feature screens remain planned until their phases are completed.
 Changes to this design should be reflected here and in `PROJECT_ROADMAP.md`.
 
 HeatWatch is an educational heat-risk monitoring prototype. Its calculated
@@ -69,11 +69,13 @@ separate database server, Node backend, cache, or container layer.
   geocoding results directly and store a city name and coordinates on records.
 - **React frontend** owns navigation, responsive screens, client-side loading
   and error states, visualization, and requests to the configured API base URL.
-  The shared app shell, live dashboard, and dedicated forecast page are
-  implemented. The forecast page renders hourly temperature and apparent
-  temperature trends alongside a separate per-hour Heat Index risk strip,
-  grouped Danger/Extreme Danger periods, and daily conditions. Map, history,
-  and dedicated alert screens remain future work.
+  The shared app shell, live dashboard, dedicated forecast page, and
+  interactive city map are implemented. The forecast page renders hourly
+  temperature and apparent temperature trends alongside a separate per-hour
+  Heat Index risk strip, grouped Danger/Extreme Danger periods, and daily
+  conditions. The map renders discrete current-city observations from the
+  read-only weather API; colored markers do not interpolate or imply regional
+  coverage. History and dedicated alert screens remain future work.
   An Axios service reads `VITE_API_BASE_URL` (default `/api/v1`); the Vite
   development server proxies `/api` to the configured backend origin. It does
   not reimplement provider access or treat browser-computed values as
@@ -117,10 +119,10 @@ separate database server, Node backend, cache, or container layer.
    without an explicit offset. Forecast warnings are labeled as indicative,
    not official government alerts.
 
-The map displays discrete, city-level markers and coordinates. It does not
-interpolate those points or imply spatial coverage that the data does not
-provide. History is limited to observations collected and stored by this
-application; it is not a meteorological archive.
+The map displays discrete, city-level markers and coordinates from current
+weather API responses. It does not interpolate those points or imply spatial
+coverage that the data does not provide. History is limited to observations
+collected and stored by this application; it is not a meteorological archive.
 
 ## Persistence
 
