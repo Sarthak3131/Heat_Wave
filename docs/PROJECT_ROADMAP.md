@@ -123,6 +123,24 @@ weather/forecast API integration remains in Phase 5.
 Implement and test city search, current weather, forecast, historical data, and
 alert endpoints, including serializers and API validation.
 
+- **5.1 Add validated, read-only weather and alert endpoints** — completed.
+  Added versioned routes for geocoding search, current conditions, hourly/daily
+  forecasts, paginated history, and active alerts. Current and hourly forecast
+  responses include the Phase 4 heat-risk assessment.
+- **5.2 Add request/response serializers, filtering, and pagination** —
+  completed. Added query serializers for city, coordinates, forecast days, and
+  city filters; read-only model serializers; city filtering; and bounded
+  page-size pagination.
+- **5.3 Test API validation, permissions, and provider error mapping** —
+  completed. Sixteen focused API tests cover valid responses, malformed
+  requests, upstream errors, pagination/filtering, and public write rejection.
+  Full backend suite: 55 tests passed.
+- **5.4 Document API contracts** — completed. Added `API_DOCUMENTATION.md`
+  with endpoint parameters, response content, pagination, and error statuses.
+
+**Phase 5 — Django REST APIs: complete.** The API exposes current provider data
+and reads existing history/alerts; it does not persist observations or generate
+alerts.
 ## Phase 6 — Alert Management
 
 Generate forecast-based alerts, prevent duplicate active alerts, support
@@ -192,4 +210,5 @@ begin the next step automatically.
 - Phase 2 — Database and Administration: **complete**.
 - Phase 3 — Weather API Integration: **complete**.
 - Phase 4 — Heat Index Engine: **complete**.
-- Phases 5–16: **not started**.
+- Phase 5 — Django REST APIs: **complete**.
+- Phases 6–16: **not started**.

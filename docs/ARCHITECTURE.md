@@ -88,9 +88,8 @@ separate database server, Node backend, cache, or container layer.
 2. Django validates query parameters and calls a domain/service function.
 3. Weather services make bounded-timeout requests to Open-Meteo, validate the
    provider payload and units/timezone, and surface provider/network errors as
-   explicit service errors. Geocoding, current conditions, and hourly/daily
-   forecasts are implemented and covered by mocked tests; REST endpoint
-   translation is planned for Phase 5.
+   explicit service errors. Geocoding, current conditions, hourly/daily
+   forecasts, and their read-only API endpoints are implemented and tested.
 4. The backend calculates the applicable NOAA Rothfusz Heat Index and
    indicative risk category from ambient temperature and relative humidity.
    The calculation and recommendations are implemented in
@@ -154,19 +153,18 @@ input boundaries. Avoid storing credentials or unnecessary personal data.
 
 ## API boundary
 
-The API is versionable and read-oriented for anonymous weather/history/alert
-consumption. Proposed resource families (exact paths and schemas are finalized
-when implemented and documented in `API_DOCUMENTATION.md`):
+The versioned API is read-only and anonymously accessible. Implemented
+resources under `/api/v1` are `GET /weather/cities/`, `/weather/current/`,
+`/weather/forecast/`, `/weather/history/`, and `/alerts/`. Weather endpoints
+accept validated city or coordinate parameters and map provider/network
+failures to explicit HTTP responses. Current and hourly forecast results
+include calculated heat-risk details; historical records and active alerts
+are paginated, with an optional city filter. See `API_DOCUMENTATION.md` for
+query constraints, response fields, pagination, and status codes.
 
-- city geocoding/search;
-- current weather by a resolved city or coordinates;
-- five-day forecast with timezone and hourly/daily series;
-- paginated historical observations, filterable by city;
-- active forecast-based alerts.
-
-Django Admin is the initial privileged management interface. Public API clients
-must not create, edit, or deactivate protected records or alerts. Any future
-write endpoint requires an explicit permission policy and tests.
+Django Admin is the privileged management interface. The API has no public
+write operations; unsupported methods return 405. Any future write endpoint
+requires an explicit permission policy and tests.
 
 ## Configuration and error handling
 

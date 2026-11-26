@@ -2,9 +2,9 @@
 
 ## Current position
 
-- **Current phase:** Phase 4 — Heat Index Engine
-- **Current step:** Phase 4 complete; Phase 5 — Django REST APIs is next
-- **Status:** Phases 0–4 complete; awaiting authorization to continue
+- **Current phase:** Phase 5 — Django REST APIs
+- **Current step:** Phase 5 complete; Phase 6 — Alert Management is next
+- **Status:** Phases 0–5 complete; awaiting authorization to continue
 
 ## Completed
 
@@ -187,6 +187,25 @@
 - **Phase 4 complete:** The independently tested Heat Index/risk service is
   ready for API integration in Phase 5. It does not itself persist data or
   create weather/forecast endpoints.
+- **Phase 5, Steps 5.1–5.2:** Added public read-only versioned APIs:
+  `GET /api/v1/weather/cities/`, `/weather/current/`, `/weather/forecast/`,
+  `/weather/history/`, and `/api/v1/alerts/`. Query serializers validate city
+  text, coordinate bounds, forecast days, and city filters. Current conditions
+  and hourly forecasts include Heat Index/risk/recommendation results when
+  applicable. History and active alerts use a 20-item default page size,
+  optional city filtering, and a maximum page size of 100. Model serializers
+  return stored history and active alert records.
+- **Phase 5, Step 5.3:** Added 16 focused API tests for provider-backed
+  responses and error mapping, input validation, heat-risk integration,
+  history/alert filtering and pagination, and rejection of public writes.
+  Pagination now rejects non-integer and out-of-range page sizes. Focused API
+  tests passed (16); full backend suite passed (55); Django system checks
+  passed. No database migration was needed.
+- **Phase 5, Step 5.4:** Added `docs/API_DOCUMENTATION.md` describing endpoint
+  parameters, response content, pagination, and error statuses.
+- **Phase 5 complete:** Read-only REST APIs are implemented and tested. History
+  and alert endpoints read existing database entries; current weather requests
+  do not persist observations, and no alert generation was added.
 
 ## Pending
 
@@ -195,7 +214,8 @@
 - Phase 2: complete (steps 2.1–2.6).
 - Phase 3: complete (steps 3.1–3.4).
 - Phase 4: complete (steps 4.1–4.3).
-- Phases 5–16: not started.
+- Phase 5: complete (steps 5.1–5.4).
+- Phases 6–16: not started.
 
 ## Verification
 
@@ -235,6 +255,8 @@
   were mocked; no live provider smoke request was made.
 - Phase 4: focused Heat Index suite passed (10 tests); full backend suite
   passed (39 tests); Django system checks passed; no migration was required.
+- Phase 5: focused API suite passed (16 tests); full backend suite passed (55
+  tests); Django system checks passed; migration check reported no changes.
 - **Checks passed:** Backend directory existence and empty-file checks;
   virtual-environment interpreter and pip checks; installed dependency
   version checks; `pip check`; Django system check; Python syntax compilation;
@@ -244,7 +266,8 @@
   `DJANGO_SETTINGS_MODULE`, then expecting a blank dotenv value to parse as
   `None`); corrected probes passed, with no application defect found.
 - **Tests passed:** 15 Django model/admin tests; 14 Open-Meteo service tests;
-  10 Heat Index service tests; 39 tests in the full backend suite.
+  10 Heat Index service tests; 16 API tests; 55 tests in the full backend
+  suite.
 - **Tests failed:** None in the final Phase 2 run.
 
 ## Known issues and notes
@@ -265,4 +288,4 @@
 
 ## Next recommended action
 
-On the next authorized phase, begin Phase 5 — Django REST APIs.
+On the next authorized phase, begin Phase 6 — Alert Management.
