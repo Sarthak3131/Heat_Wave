@@ -3,9 +3,9 @@
 ## Status and scope
 
 This document records the intended architecture and implementation status
-through Phase 7. Backend provider, Heat Index, API, alert, and shared frontend
-shell foundations are implemented; feature-specific screens remain planned
-until their phases are completed.
+through Phase 8. Backend provider, Heat Index, API, alert, shared frontend
+shell, and live dashboard foundations are implemented; other feature screens
+remain planned until their phases are completed.
 Changes to this design should be reflected here and in `PROJECT_ROADMAP.md`.
 
 HeatWatch is an educational heat-risk monitoring prototype. Its calculated
@@ -69,8 +69,9 @@ separate database server, Node backend, cache, or container layer.
   geocoding results directly and store a city name and coordinates on records.
 - **React frontend** owns navigation, responsive screens, client-side loading
   and error states, visualization, and requests to the configured API base URL.
-  The shared app shell, route placeholders, and reusable presentation
-  components are implemented; feature-specific screens remain future work.
+  The shared app shell and a live dashboard for city search, current weather,
+  heat risk, forecast, and active alerts are implemented. Forecast, map,
+  history, and dedicated alert screens remain future work.
   An Axios service reads `VITE_API_BASE_URL` (default `/api/v1`); the Vite
   development server proxies `/api` to the configured backend origin. It does
   not reimplement provider access or treat browser-computed values as

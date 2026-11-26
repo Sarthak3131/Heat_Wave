@@ -2,9 +2,9 @@
 
 ## Current position
 
-- **Current phase:** Phase 7 — React Initialization
-- **Current step:** Phase 7 complete; Phase 8 — Dashboard UI is next
-- **Status:** Phases 0–7 complete; awaiting authorization to continue
+- **Current phase:** Phase 8 — Dashboard UI
+- **Current step:** Phase 8 complete; Phase 9 — Forecast Module is next
+- **Status:** Phases 0–8 complete; awaiting authorization to continue
 
 ## Completed
 
@@ -244,6 +244,22 @@
   primitives are ready for dashboard and feature implementations. This phase
   does not add feature-specific API calls or claim that forecast/map/history/
   alert screens are complete.
+- **Phase 8, Steps 8.1–8.3:** Replaced the dashboard overview with a live
+  weather dashboard. Added city search and selection, current conditions,
+  timezone/local observation time, Heat Index/risk/recommendation, interactive
+  hourly ambient/apparent temperature chart, five-day daily outlook, and
+  location-filtered active alerts. Added loading, empty, retry/error, and manual
+  refresh states; current, forecast, and alert API calls fail independently.
+  Weather and alert content remain informational and read-only.
+- **Phase 8, Step 8.4:** Verified in the browser against the local Django API
+  and Open-Meteo: the default New Delhi location returned current conditions,
+  an applicable/not-applicable heat-risk state, five daily forecast rows, and
+  an active-alert empty state. City search returned Mumbai; selecting it
+  updated location, timezone, weather, risk, and daily forecast without
+  endpoint errors. `npm run lint` and `npm run build` passed; the forecast
+  chart is lazy-loaded to keep it out of the initial JS chunk.
+- **Phase 8 complete:** The dashboard uses existing read APIs only. It does
+  not save weather observations or automatically generate alerts.
 
 ## Pending
 
@@ -255,7 +271,8 @@
 - Phase 5: complete (steps 5.1–5.4).
 - Phase 6: complete (steps 6.1–6.4).
 - Phase 7: complete (steps 7.1–7.3).
-- Phases 8–16: not started.
+- Phase 8: complete (steps 8.1–8.4).
+- Phases 9–16: not started.
 
 ## Verification
 
@@ -301,6 +318,9 @@
   full backend suite passed (64 tests); Django system checks passed; migration
   check reported no changes.
 - Phase 7: `npm run lint` passed; `npm run build` passed.
+- Phase 8: `npm run lint` passed; `npm run build` passed; browser smoke test
+  passed against local frontend/backend with live city search, current weather,
+  forecast, risk, and empty-alert state.
 - **Checks passed:** Backend directory existence and empty-file checks;
   virtual-environment interpreter and pip checks; installed dependency
   version checks; `pip check`; Django system check; Python syntax compilation;
@@ -314,6 +334,8 @@
   64 tests in the full backend
   suite.
 - **Frontend checks passed:** `npm run lint`; `npm run build`.
+- **Frontend live smoke test:** New Delhi dashboard data and Mumbai city
+  selection refreshed successfully with no API errors.
 - **Tests failed:** None in the final Phase 2 run.
 
 ## Known issues and notes
@@ -334,4 +356,4 @@
 
 ## Next recommended action
 
-On the next authorized phase, begin Phase 8 — Dashboard UI.
+On the next authorized phase, begin Phase 9 — Forecast Module.

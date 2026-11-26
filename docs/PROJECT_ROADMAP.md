@@ -194,6 +194,27 @@ Phases 8–12.
 Build the responsive dashboard and connect weather, Heat Index, risk,
 recommendation, forecast, and active-alert views to the backend.
 
+- **8.1 Connect city selection and current conditions** — completed. Added
+  Open-Meteo city search and location selection, then loads and displays current
+  temperature, condition, apparent temperature, humidity, wind, timestamp, and
+  location timezone.
+- **8.2 Present Heat Index risk and guidance** — completed. The dashboard shows
+  the applicable Heat Index, indicative risk category, category-specific
+  recommendation, and not-applicable state with informational disclaimers.
+- **8.3 Add forecast and active-alert overview** — completed. Added a lazy-
+  loaded hourly temperature/feels-like chart, five-day daily outlook, and
+  location-filtered active alerts with forecast time and recommendations.
+  Independent API errors, loading states, empty states, refresh, and retry are
+  handled in the UI.
+- **8.4 Verify responsive and live API behavior** — completed. Browser smoke
+  checks loaded New Delhi weather and forecast, searched for and selected
+  Mumbai, and confirmed updated location/timezone/current risk/five-day
+  forecast with no API errors. `npm run lint` and `npm run build` pass; the
+  chart is split into a lazy-loaded bundle.
+
+**Phase 8 — Dashboard UI: complete.** The dashboard consumes existing APIs;
+it does not write weather history or trigger alert generation.
+
 ## Phase 9 — Forecast Module
 
 Build the hourly and daily forecast experience, charts, forecast risk
@@ -251,4 +272,5 @@ begin the next step automatically.
 - Phase 5 — Django REST APIs: **complete**.
 - Phase 6 — Alert Management: **complete**.
 - Phase 7 — React Initialization: **complete**.
-- Phases 8–16: **not started**.
+- Phase 8 — Dashboard UI: **complete**.
+- Phases 9–16: **not started**.
