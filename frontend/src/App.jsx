@@ -1,57 +1,77 @@
-import {
-  createBrowserRouter,
-  Link,
-  RouterProvider,
-} from 'react-router-dom'
-
-function HomePage() {
-  return (
-    <main className="container min-vh-100 d-flex align-items-center py-5">
-      <section className="mx-auto w-100" style={{ maxWidth: '46rem' }}>
-        <p className="text-uppercase fw-semibold text-primary mb-2">
-          Disaster management | Educational prototype
-        </p>
-        <h1 className="display-4 fw-bold text-dark">HeatWatch</h1>
-        <p className="lead text-secondary">
-          Extreme heat monitoring and early warning.
-        </p>
-        <p className="text-secondary mb-0">
-          The application foundation is ready. Weather monitoring, forecasts,
-          heat-risk assessments, maps, and alerts will be added in subsequent
-          development phases. This prototype is not an official emergency
-          warning service.
-        </p>
-      </section>
-    </main>
-  )
-}
-
-function NotFoundPage() {
-  return (
-    <main className="container min-vh-100 d-flex align-items-center py-5">
-      <section className="mx-auto w-100" style={{ maxWidth: '46rem' }}>
-        <p className="text-uppercase fw-semibold text-primary mb-2">
-          Page not found
-        </p>
-        <h1 className="display-5 fw-bold text-dark">
-          That page is unavailable.
-        </h1>
-        <Link className="btn btn-primary mt-3" to="/">
-          Return to HeatWatch
-        </Link>
-      </section>
-    </main>
-  )
-}
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import AppLayout from './components/AppLayout.jsx'
+import DashboardPage from './pages/DashboardPage.jsx'
+import PagePlaceholder from './pages/PagePlaceholder.jsx'
+import NotFoundPage from './pages/NotFoundPage.jsx'
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <HomePage />,
-  },
-  {
-    path: '*',
-    element: <NotFoundPage />,
+    element: <AppLayout />,
+    children: [
+      {
+        path: '/',
+        element: <DashboardPage />,
+      },
+      {
+        path: '/forecast',
+        element: (
+          <PagePlaceholder
+            eyebrow="Forecast"
+            title="Plan ahead for the heat."
+            description="Hourly and daily forecast insights will appear here."
+            phase="Phase 9"
+          />
+        ),
+      },
+      {
+        path: '/map',
+        element: (
+          <PagePlaceholder
+            eyebrow="City map"
+            title="Explore local conditions."
+            description="City-level weather and heat-risk locations will appear here."
+            phase="Phase 10"
+          />
+        ),
+      },
+      {
+        path: '/history',
+        element: (
+          <PagePlaceholder
+            eyebrow="History"
+            title="Review recorded conditions."
+            description="Weather observations collected by HeatWatch will appear here."
+            phase="Phase 11"
+          />
+        ),
+      },
+      {
+        path: '/alerts',
+        element: (
+          <PagePlaceholder
+            eyebrow="Alerts"
+            title="Stay informed about forecast risk."
+            description="Active forecast-based heat alerts will appear here."
+            phase="Phase 12"
+          />
+        ),
+      },
+      {
+        path: '/about',
+        element: (
+          <PagePlaceholder
+            eyebrow="About HeatWatch"
+            title="A learning project for hotter days."
+            description="HeatWatch is an educational prototype, not an official emergency warning service."
+            phase="Project information"
+          />
+        ),
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
+      },
+    ],
   },
 ])
 

@@ -2,9 +2,9 @@
 
 ## Current position
 
-- **Current phase:** Phase 6 — Alert Management
-- **Current step:** Phase 6 complete; Phase 7 — React Initialization is next
-- **Status:** Phases 0–6 complete; awaiting authorization to continue
+- **Current phase:** Phase 7 — React Initialization
+- **Current step:** Phase 7 complete; Phase 8 — Dashboard UI is next
+- **Status:** Phases 0–7 complete; awaiting authorization to continue
 
 ## Completed
 
@@ -229,6 +229,21 @@
 - **Phase 6 complete:** Forecast alerts can be refreshed explicitly per
   location using the documented command. Scheduling recurring runs is not
   configured in this phase.
+- **Phase 7, Steps 7.1–7.2:** Replaced the initial standalone landing route with
+  a responsive shared app shell, sticky navigation, mobile menu, skip link,
+  semantic main/footer, and shared `PageHeading` and `SurfaceCard` components.
+  Added a dashboard overview, about page, and named route placeholders for
+  forecast, map, history, and alerts; feature pages accurately indicate that
+  their feature work is pending.
+- **Phase 7, Step 7.3:** Added responsive layout styling, keyboard focus
+  visibility, reduced-motion support, prototype/disclaimer messaging, and
+  document description metadata. Removed starter styles and the unused
+  Bootstrap CSS import so custom component styles are the sole app styling
+  foundation. `npm run lint` and `npm run build` both passed.
+- **Phase 7 complete:** Shared React routing, layout, and presentation
+  primitives are ready for dashboard and feature implementations. This phase
+  does not add feature-specific API calls or claim that forecast/map/history/
+  alert screens are complete.
 
 ## Pending
 
@@ -239,7 +254,8 @@
 - Phase 4: complete (steps 4.1–4.3).
 - Phase 5: complete (steps 5.1–5.4).
 - Phase 6: complete (steps 6.1–6.4).
-- Phases 7–16: not started.
+- Phase 7: complete (steps 7.1–7.3).
+- Phases 8–16: not started.
 
 ## Verification
 
@@ -284,6 +300,7 @@
 - Phase 6: focused alert generation/admin/command suite passed (17 tests);
   full backend suite passed (64 tests); Django system checks passed; migration
   check reported no changes.
+- Phase 7: `npm run lint` passed; `npm run build` passed.
 - **Checks passed:** Backend directory existence and empty-file checks;
   virtual-environment interpreter and pip checks; installed dependency
   version checks; `pip check`; Django system check; Python syntax compilation;
@@ -296,6 +313,7 @@
   10 Heat Index service tests; 16 API tests; 17 alert/admin/command tests;
   64 tests in the full backend
   suite.
+- **Frontend checks passed:** `npm run lint`; `npm run build`.
 - **Tests failed:** None in the final Phase 2 run.
 
 ## Known issues and notes
@@ -316,4 +334,4 @@
 
 ## Next recommended action
 
-On the next authorized phase, begin Phase 7 — React Initialization.
+On the next authorized phase, begin Phase 8 — Dashboard UI.

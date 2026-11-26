@@ -173,6 +173,22 @@ provider requests or database writes.
 Initialize the frontend, configure routing and API access, build shared layout
 and UI components, and verify a production build.
 
+- **7.1 Build the shared responsive application shell** — completed. Added the
+  sticky brand/navigation header, mobile menu, skip link, content outlet, and
+  informational footer/disclaimer.
+- **7.2 Add route and reusable component foundations** — completed. Added
+  dashboard overview, forecast/map/history/alerts/about placeholders, not-found
+  route, shared page heading and surface card components, and active navigation
+  state. Feature routes remain clearly marked as under development.
+- **7.3 Verify accessibility basics and production delivery** — completed.
+  Added visible keyboard focus, skip-to-content navigation, semantic landmarks,
+  reduced-motion support, responsive styles, and a document description.
+  `npm run lint` and `npm run build` pass.
+
+**Phase 7 — React Initialization: complete.** The app shell and shared UI
+foundations are ready; feature-specific screens and API integration remain in
+Phases 8–12.
+
 ## Phase 8 — Dashboard UI
 
 Build the responsive dashboard and connect weather, Heat Index, risk,
@@ -234,4 +250,5 @@ begin the next step automatically.
 - Phase 4 — Heat Index Engine: **complete**.
 - Phase 5 — Django REST APIs: **complete**.
 - Phase 6 — Alert Management: **complete**.
-- Phases 7–16: **not started**.
+- Phase 7 — React Initialization: **complete**.
+- Phases 8–16: **not started**.
