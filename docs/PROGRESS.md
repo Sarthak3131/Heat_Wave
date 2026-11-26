@@ -2,9 +2,9 @@
 
 ## Current position
 
-- **Current phase:** Phase 2 — Database and Administration
-- **Current step:** Phase 2 complete; Phase 3 — Weather API Integration is next
-- **Status:** Phases 0–2 complete; awaiting `NEXT`
+- **Current phase:** Phase 3 — Weather API Integration
+- **Current step:** Phase 3 complete; Phase 4 — Heat Index Engine is next
+- **Status:** Phases 0–3 complete; awaiting authorization to continue
 
 ## Completed
 
@@ -152,13 +152,28 @@
 - **Phase 2 complete:** Database schema, migrations, admin management, and
   focused validation/authorization tests are implemented. Weather provider
   integration and APIs are not implemented yet.
+- **Phase 3, Steps 3.1–3.3:** Added `OpenMeteoClient` in
+  `backend/weather/services/open_meteo.py`. It searches and normalizes city
+  locations, retrieves validated current conditions, and retrieves aligned
+  hourly and daily forecasts (five days by default; 1–16 days supported).
+  Requests use bounded connect/read timeouts and metric units; results include
+  timezone metadata. Invalid caller input, no city match, provider errors, and
+  temporary provider/network failures use distinct explicit exceptions.
+- **Phase 3, Step 3.4:** Added 14 mocked tests covering geocoding/current/
+  forecast results, input and payload validation, array alignment, malformed
+  JSON, provider errors, HTTP failures, timeouts, and rate limits. All 14
+  focused tests and all 29 backend tests passed; Django system checks passed.
+- **Phase 3 complete:** Provider service integration is implemented and tested.
+  No REST endpoints, Heat Index calculation, or observation persistence were
+  added; these remain later-phase work.
 
 ## Pending
 
 - Phase 0: complete (steps 0.1–0.3).
 - Phase 1: complete (steps 1.1–1.9).
 - Phase 2: complete (steps 2.1–2.6).
-- Phases 3–16: not started.
+- Phase 3: complete (steps 3.1–3.4).
+- Phases 4–16: not started.
 
 ## Verification
 
@@ -193,6 +208,9 @@
 - Phase 2: all 15 Django tests passed; `makemigrations --check --dry-run`
   reported no changes; `manage.py check` passed; `pip check` reported no broken
   requirements; both app migrations show applied in SQLite.
+- Phase 3: focused Open-Meteo suite passed (14 tests); full backend suite
+  passed (29 tests); Django system checks passed. Provider HTTP interactions
+  were mocked; no live provider smoke request was made.
 - **Checks passed:** Backend directory existence and empty-file checks;
   virtual-environment interpreter and pip checks; installed dependency
   version checks; `pip check`; Django system check; Python syntax compilation;
@@ -201,7 +219,8 @@
   failed due to verification-command setup/expectation errors (missing
   `DJANGO_SETTINGS_MODULE`, then expecting a blank dotenv value to parse as
   `None`); corrected probes passed, with no application defect found.
-- **Tests passed:** 15 Django model and admin tests.
+- **Tests passed:** 15 Django model/admin tests; 14 Open-Meteo service tests;
+  29 tests in the full backend suite.
 - **Tests failed:** None in the final Phase 2 run.
 
 ## Known issues and notes
@@ -222,5 +241,4 @@
 
 ## Next recommended action
 
-On `NEXT`, begin Phase 3 — Weather API Integration, starting with Open-Meteo
-geocoding service design and implementation.
+On the next authorized phase, begin Phase 4 — Heat Index Engine.

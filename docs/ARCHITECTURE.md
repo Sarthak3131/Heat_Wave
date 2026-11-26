@@ -2,10 +2,10 @@
 
 ## Status and scope
 
-This document records the planned architecture as of Phase 0. It is a design
-baseline, not evidence that any application components have been implemented
-or tested. Changes to this design should be reflected here and in
-`PROJECT_ROADMAP.md` when they are made.
+This document records the intended architecture and implementation status
+through Phase 3. The provider integration described below is implemented and
+tested; later components remain planned until their phases are completed.
+Changes to this design should be reflected here and in `PROJECT_ROADMAP.md`.
 
 HeatWatch is an educational heat-risk monitoring prototype. Its calculated
 Heat Index, indicative categories, forecasts, and alerts are informational;
@@ -56,7 +56,8 @@ separate database server, Node backend, cache, or container layer.
   points.
 - **Weather domain (`weather`)** owns Open-Meteo HTTP access, geocoding/current/
   forecast response validation, Heat Index and risk calculations, read-only
-  weather endpoints, and persisted observations.
+  weather endpoints, and persisted observations. The Open-Meteo service client
+  is implemented; calculations and endpoints are planned for later phases.
 - **Alert domain (`alerts`)** owns forecast-risk alert creation, duplicate
   prevention, active state, public read access, and privileged Django Admin
   management.
@@ -71,7 +72,10 @@ separate database server, Node backend, cache, or container layer.
   authoritative.
 - **Open-Meteo** provides geocoding, current, and forecast data. A server-side
   Requests client keeps provider parsing and network failure handling in one
-  place. No API key is assumed.
+  place. The validated client is implemented in
+  `backend/weather/services/open_meteo.py` and uses bounded request timeouts,
+  explicit metric units, timezone metadata, and distinct input/provider/
+  availability exceptions. No API key is assumed.
 - **SQLite** is the single primary database and Django ORM is the persistence
   boundary. Python's bundled SQLite is sufficient for local development.
 
@@ -82,7 +86,9 @@ separate database server, Node backend, cache, or container layer.
 2. Django validates query parameters and calls a domain/service function.
 3. Weather services make bounded-timeout requests to Open-Meteo, validate the
    provider payload and units/timezone, and surface provider/network errors as
-   explicit API errors.
+   explicit service errors. Geocoding, current conditions, and hourly/daily
+   forecasts are implemented and covered by mocked tests; REST endpoint
+   translation is planned for Phase 5.
 4. The backend calculates applicable Heat Index and its indicative risk
    category from ambient temperature and relative humidity. Apparent
    temperature remains a separately named provider field; neither it nor Heat

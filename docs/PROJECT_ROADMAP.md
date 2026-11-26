@@ -5,8 +5,7 @@
 HeatWatch is an educational Django REST Framework and React application for
 weather monitoring, indicative heat-risk assessment, forecasts, maps, alerts,
 and application-collected weather history. It is not an official emergency
-warning service. SQLite is the primary database and Open-Meteo is the planned
-weather data provider.
+warning service. SQLite is the primary database and Open-Meteo is the weather data provider.
 
 ## Phase 0 — Project Inspection and Planning
 
@@ -80,6 +79,23 @@ weather data provider.
 
 Integrate Open-Meteo geocoding, current weather, and forecast services with
 validated responses and explicit error handling.
+
+- **3.1 Implement Open-Meteo geocoding** — completed. Added city search with
+  input validation, normalized location metadata, and explicit no-match and
+  provider-error handling.
+- **3.2 Implement current-weather retrieval** — completed. Added metric current
+  conditions, timezone metadata, range/type validation, and normalized output.
+- **3.3 Implement forecast retrieval** — completed. Added configurable 1–16
+  day forecasts (five days by default), aligned hourly/daily series, timestamps,
+  sunrise/sunset, and response validation.
+- **3.4 Test provider behavior and failure handling** — completed. Fourteen
+  mocked tests cover valid results, malformed data, invalid input, network
+  failures, rate limits, and HTTP/provider errors. Full backend suite: 29 tests
+  passed.
+
+**Phase 3 — Weather API Integration: complete.** This phase provides service
+functions only; Django REST endpoints, Heat Index calculations, and database
+persistence remain in later phases.
 
 ## Phase 4 — Heat Index Engine
 
@@ -157,4 +173,7 @@ begin the next step automatically.
 ## Phase status
 
 - Phase 0 — Project Inspection and Planning: **complete**.
-- Phases 1–16: **not started**.
+- Phase 1 — Project Initialization: **complete**.
+- Phase 2 — Database and Administration: **complete**.
+- Phase 3 — Weather API Integration: **complete**.
+- Phases 4–16: **not started**.
