@@ -3,8 +3,9 @@
 ## Status and scope
 
 This document records the intended architecture and implementation status
-through Phase 3. The provider integration described below is implemented and
-tested; later components remain planned until their phases are completed.
+through Phase 4. The provider integration and Heat Index service described
+below are implemented and tested; later components remain planned until their
+phases are completed.
 Changes to this design should be reflected here and in `PROJECT_ROADMAP.md`.
 
 HeatWatch is an educational heat-risk monitoring prototype. Its calculated
@@ -57,7 +58,8 @@ separate database server, Node backend, cache, or container layer.
 - **Weather domain (`weather`)** owns Open-Meteo HTTP access, geocoding/current/
   forecast response validation, Heat Index and risk calculations, read-only
   weather endpoints, and persisted observations. The Open-Meteo service client
-  is implemented; calculations and endpoints are planned for later phases.
+  and Heat Index/risk service are implemented; endpoints are planned for a
+  later phase.
 - **Alert domain (`alerts`)** owns forecast-risk alert creation, duplicate
   prevention, active state, public read access, and privileged Django Admin
   management.
@@ -89,10 +91,13 @@ separate database server, Node backend, cache, or container layer.
    explicit service errors. Geocoding, current conditions, and hourly/daily
    forecasts are implemented and covered by mocked tests; REST endpoint
    translation is planned for Phase 5.
-4. The backend calculates applicable Heat Index and its indicative risk
-   category from ambient temperature and relative humidity. Apparent
-   temperature remains a separately named provider field; neither it nor Heat
-   Index is described as WBGT.
+4. The backend calculates the applicable NOAA Rothfusz Heat Index and
+   indicative risk category from ambient temperature and relative humidity.
+   The calculation and recommendations are implemented in
+   `backend/weather/services/heat_index.py`; no result is returned when the
+   initial NOAA applicability estimate is below 80 °F. Apparent temperature
+   remains a separately named provider field; neither it nor Heat Index is
+   described as WBGT.
 5. Current observations selected for persistence are saved as application-
    collected `WeatherRecord` entries with city, coordinates, measurements,
    risk, and observation timestamp. Forecast periods are not silently presented

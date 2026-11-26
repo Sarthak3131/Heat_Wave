@@ -2,9 +2,9 @@
 
 ## Current position
 
-- **Current phase:** Phase 3 — Weather API Integration
-- **Current step:** Phase 3 complete; Phase 4 — Heat Index Engine is next
-- **Status:** Phases 0–3 complete; awaiting authorization to continue
+- **Current phase:** Phase 4 — Heat Index Engine
+- **Current step:** Phase 4 complete; Phase 5 — Django REST APIs is next
+- **Status:** Phases 0–4 complete; awaiting authorization to continue
 
 ## Completed
 
@@ -166,6 +166,27 @@
 - **Phase 3 complete:** Provider service integration is implemented and tested.
   No REST endpoints, Heat Index calculation, or observation persistence were
   added; these remain later-phase work.
+- **Phase 4, Steps 4.1–4.2:** Implemented `calculate_heat_index_c`,
+  `risk_level_for_heat_index`, `safety_recommendation_for_risk`, and
+  `assess_heat_risk` in `backend/weather/services/heat_index.py`. The
+  Rothfusz regression runs in Fahrenheit and converts its result to Celsius;
+  the initial simple estimate gates use of the regression at 80 °F, and the
+  NOAA low-/high-humidity adjustments are applied. Results are rounded to two
+  decimal places. Invalid/non-finite values and out-of-range temperature,
+  humidity, or Heat Index inputs raise an explicit validation exception.
+  Indicative category boundaries are exactly 27, 32, 41, and 54 °C. Each
+  category has conservative safety guidance; not-applicable results contain
+  no Heat Index, category, or recommendation.
+- **Phase 4, Step 4.3:** Added 10 focused tests for the 90 °F/70% RH reference
+  case, applicability, both humidity adjustments, input validation, exact
+  category boundaries, recommendations, and combined assessment output.
+  Focused tests passed (10); the full backend suite passed (39); Django system
+  checks passed. No database migration was needed. Calculation guidance was
+  checked against the
+  [NOAA Weather Prediction Center Heat Index Equation](https://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml).
+- **Phase 4 complete:** The independently tested Heat Index/risk service is
+  ready for API integration in Phase 5. It does not itself persist data or
+  create weather/forecast endpoints.
 
 ## Pending
 
@@ -173,7 +194,8 @@
 - Phase 1: complete (steps 1.1–1.9).
 - Phase 2: complete (steps 2.1–2.6).
 - Phase 3: complete (steps 3.1–3.4).
-- Phases 4–16: not started.
+- Phase 4: complete (steps 4.1–4.3).
+- Phases 5–16: not started.
 
 ## Verification
 
@@ -211,6 +233,8 @@
 - Phase 3: focused Open-Meteo suite passed (14 tests); full backend suite
   passed (29 tests); Django system checks passed. Provider HTTP interactions
   were mocked; no live provider smoke request was made.
+- Phase 4: focused Heat Index suite passed (10 tests); full backend suite
+  passed (39 tests); Django system checks passed; no migration was required.
 - **Checks passed:** Backend directory existence and empty-file checks;
   virtual-environment interpreter and pip checks; installed dependency
   version checks; `pip check`; Django system check; Python syntax compilation;
@@ -220,7 +244,7 @@
   `DJANGO_SETTINGS_MODULE`, then expecting a blank dotenv value to parse as
   `None`); corrected probes passed, with no application defect found.
 - **Tests passed:** 15 Django model/admin tests; 14 Open-Meteo service tests;
-  29 tests in the full backend suite.
+  10 Heat Index service tests; 39 tests in the full backend suite.
 - **Tests failed:** None in the final Phase 2 run.
 
 ## Known issues and notes
@@ -241,4 +265,4 @@
 
 ## Next recommended action
 
-On the next authorized phase, begin Phase 4 — Heat Index Engine.
+On the next authorized phase, begin Phase 5 — Django REST APIs.

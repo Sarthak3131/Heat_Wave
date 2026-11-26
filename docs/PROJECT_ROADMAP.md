@@ -103,6 +103,21 @@ Implement and test the applicable NOAA Rothfusz Heat Index calculation,
 indicative risk categories, input validation, and category-specific safety
 recommendations.
 
+- **4.1 Implement Heat Index calculation and applicability** — completed.
+  Added the NOAA Rothfusz regression in Fahrenheit with simple-formula
+  applicability check, low- and high-humidity adjustments, Celsius output, and
+  validation for numeric inputs and supported ranges.
+- **4.2 Implement risk classification and recommendations** — completed.
+  Added exact category boundaries at 27, 32, 41, and 54 °C plus conservative
+  category-specific safety guidance. Not-applicable conditions return no Heat
+  Index, risk, or recommendation.
+- **4.3 Test calculations, boundaries, and validation** — completed. Ten
+  focused tests pass, including the 90 °F/70% RH reference case and regression
+  adjustments. The full backend suite passes all 39 tests.
+
+**Phase 4 — Heat Index Engine: complete.** The calculation is a service only;
+weather/forecast API integration remains in Phase 5.
+
 ## Phase 5 — Django REST APIs
 
 Implement and test city search, current weather, forecast, historical data, and
@@ -176,4 +191,5 @@ begin the next step automatically.
 - Phase 1 — Project Initialization: **complete**.
 - Phase 2 — Database and Administration: **complete**.
 - Phase 3 — Weather API Integration: **complete**.
-- Phases 4–16: **not started**.
+- Phase 4 — Heat Index Engine: **complete**.
+- Phases 5–16: **not started**.
