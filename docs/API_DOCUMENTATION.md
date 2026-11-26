@@ -83,5 +83,14 @@ provider/network failures return 503; rejected or malformed provider responses
 return 502. Unsupported methods, including public writes, return 405.
 
 These endpoints do not create observations or alerts. Weather-record history
-and alert entries are read from the application database; persistence and
-forecast-alert generation are handled by their respective later-phase flows.
+and alert entries are read from the application database. Current weather
+requests do not persist observations. Forecast alerts are generated separately
+with the Django management command, run from `backend/`:
+
+```text
+python manage.py generate_heat_alerts --city "New Delhi" --country India --latitude 28.6139 --longitude 77.209 --days 5
+```
+
+Only forecast hours classified as Danger or Extreme Danger create alerts.
+Repeated runs update active alerts for unchanged forecast periods and deactivate
+alerts whose forecast risk has resolved.

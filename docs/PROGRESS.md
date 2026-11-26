@@ -2,9 +2,9 @@
 
 ## Current position
 
-- **Current phase:** Phase 5 — Django REST APIs
-- **Current step:** Phase 5 complete; Phase 6 — Alert Management is next
-- **Status:** Phases 0–5 complete; awaiting authorization to continue
+- **Current phase:** Phase 6 — Alert Management
+- **Current step:** Phase 6 complete; Phase 7 — React Initialization is next
+- **Status:** Phases 0–6 complete; awaiting authorization to continue
 
 ## Completed
 
@@ -206,6 +206,29 @@
 - **Phase 5 complete:** Read-only REST APIs are implemented and tested. History
   and alert endpoints read existing database entries; current weather requests
   do not persist observations, and no alert generation was added.
+- **Phase 6, Steps 6.1–6.2:** Implemented `generate_forecast_alerts` in
+  `backend/alerts/services.py`. It creates alerts only for forecast hours with
+  Danger or Extreme Danger risk, stores temperature, humidity, Heat Index,
+  timezone-aware forecast time, and conservative recommendation, refreshes
+  existing active alerts without duplicates, and deactivates alerts only when
+  returned periods have evaluable measurements and no longer meet the alert
+  threshold. Missing or unreturned forecast periods do not deactivate alerts.
+- **Phase 6, Step 6.3:** Added the `generate_heat_alerts` Django management
+  command for an explicit city/coordinate forecast refresh. The existing
+  conditional unique constraint prevents concurrent duplicate active alerts;
+  Django Admin keeps activation state editable and supports its protected
+  deactivation action. No public API write endpoint or public provider-fetch
+  trigger was added.
+- **Phase 6, Step 6.4:** Added nine service/management-command tests for
+  severity filtering, IANA timezone conversion, idempotent update, forecast
+  resolution, preserving unreturned/missing-data periods, replacement after
+  deactivation, input validation, and command wiring. Focused alert/admin/
+  command tests passed (17); full backend suite passed (64); Django system
+  checks passed. No database migration was needed. Added the command example
+  and trigger threshold to `docs/API_DOCUMENTATION.md`.
+- **Phase 6 complete:** Forecast alerts can be refreshed explicitly per
+  location using the documented command. Scheduling recurring runs is not
+  configured in this phase.
 
 ## Pending
 
@@ -215,7 +238,8 @@
 - Phase 3: complete (steps 3.1–3.4).
 - Phase 4: complete (steps 4.1–4.3).
 - Phase 5: complete (steps 5.1–5.4).
-- Phases 6–16: not started.
+- Phase 6: complete (steps 6.1–6.4).
+- Phases 7–16: not started.
 
 ## Verification
 
@@ -257,6 +281,9 @@
   passed (39 tests); Django system checks passed; no migration was required.
 - Phase 5: focused API suite passed (16 tests); full backend suite passed (55
   tests); Django system checks passed; migration check reported no changes.
+- Phase 6: focused alert generation/admin/command suite passed (17 tests);
+  full backend suite passed (64 tests); Django system checks passed; migration
+  check reported no changes.
 - **Checks passed:** Backend directory existence and empty-file checks;
   virtual-environment interpreter and pip checks; installed dependency
   version checks; `pip check`; Django system check; Python syntax compilation;
@@ -266,7 +293,8 @@
   `DJANGO_SETTINGS_MODULE`, then expecting a blank dotenv value to parse as
   `None`); corrected probes passed, with no application defect found.
 - **Tests passed:** 15 Django model/admin tests; 14 Open-Meteo service tests;
-  10 Heat Index service tests; 16 API tests; 55 tests in the full backend
+  10 Heat Index service tests; 16 API tests; 17 alert/admin/command tests;
+  64 tests in the full backend
   suite.
 - **Tests failed:** None in the final Phase 2 run.
 
@@ -288,4 +316,4 @@
 
 ## Next recommended action
 
-On the next authorized phase, begin Phase 6 — Alert Management.
+On the next authorized phase, begin Phase 7 — React Initialization.

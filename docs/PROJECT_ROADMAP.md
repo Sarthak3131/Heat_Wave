@@ -146,6 +146,28 @@ alerts.
 Generate forecast-based alerts, prevent duplicate active alerts, support
 activation state, and test alert behavior and administrative controls.
 
+- **6.1 Generate alerts from hourly forecasts** — completed. Added a reusable
+  alert service and `generate_heat_alerts` management command. Danger and
+  Extreme Danger periods create alerts with timezone-aware forecast times,
+  Heat Index values, and safety recommendations.
+- **6.2 Refresh and deactivate forecast alerts** — completed. Repeated runs
+  update an existing active alert for the same location and forecast period;
+  resolved evaluated periods deactivate, while missing measurement or
+  unreturned periods do not deactivate existing alerts.
+- **6.3 Prevent duplicates and support activation** — completed. Generation is
+  transaction-backed and uses the existing conditional unique constraint.
+  Django Admin provides active-state editing and the authorized bulk-deactivate
+  action; inactive alerts can be replaced by a later forecast refresh.
+- **6.4 Test management and document operations** — completed. Nine new alert
+  service/command tests cover severity, timezone conversion, refresh,
+  deactivation, missing data, duplicate prevention, validation, and command
+  integration. The full backend suite passes 64 tests. API documentation now
+  includes the management command invocation.
+
+**Phase 6 — Alert Management: complete.** Forecast alert generation is an
+explicit management operation; no unauthenticated API endpoint triggers
+provider requests or database writes.
+
 ## Phase 7 — React Initialization
 
 Initialize the frontend, configure routing and API access, build shared layout
@@ -211,4 +233,5 @@ begin the next step automatically.
 - Phase 3 — Weather API Integration: **complete**.
 - Phase 4 — Heat Index Engine: **complete**.
 - Phase 5 — Django REST APIs: **complete**.
-- Phases 6–16: **not started**.
+- Phase 6 — Alert Management: **complete**.
+- Phases 7–16: **not started**.

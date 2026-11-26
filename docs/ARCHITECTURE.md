@@ -57,12 +57,13 @@ separate database server, Node backend, cache, or container layer.
   points.
 - **Weather domain (`weather`)** owns Open-Meteo HTTP access, geocoding/current/
   forecast response validation, Heat Index and risk calculations, read-only
-  weather endpoints, and persisted observations. The Open-Meteo service client
-  and Heat Index/risk service are implemented; endpoints are planned for a
-  later phase.
+  weather endpoints, and persisted observations. Provider integration,
+  Heat-Index/risk services, and read-only endpoints are implemented.
 - **Alert domain (`alerts`)** owns forecast-risk alert creation, duplicate
   prevention, active state, public read access, and privileged Django Admin
-  management.
+  management. A transaction-backed service and management command create and
+  refresh severe forecast alerts; activation state remains managed through
+  Django Admin.
 - **Locations (`locations`, optional)** is introduced only if saved/reusable
   locations need their own lifecycle or relations. Otherwise use validated
   geocoding results directly and store a city name and coordinates on records.
@@ -101,10 +102,11 @@ separate database server, Node backend, cache, or container layer.
    collected `WeatherRecord` entries with city, coordinates, measurements,
    risk, and observation timestamp. Forecast periods are not silently presented
    as observed history.
-6. Forecast evaluation creates or refreshes forecast-based `HeatAlert` rows
-   with forecast time and risk context. A database uniqueness rule or
-   transaction-backed equivalent prevents duplicate active alerts for the
-   same city, forecast period, and alert identity.
+6. The `generate_heat_alerts` management command evaluates a location forecast
+   and creates or refreshes `HeatAlert` rows for Danger and Extreme Danger
+   forecast hours. Resolved alerts are deactivated for returned forecast
+   periods. The conditional database uniqueness rule and transactional service
+   prevent duplicate active alerts for the same city and forecast timestamp.
 7. API responses contain validated, frontend-ready values. The client renders
    timestamps with their timezone and labels warnings as forecast-based, not
    official government alerts.
