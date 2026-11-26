@@ -220,6 +220,24 @@ it does not write weather history or trigger alert generation.
 Build the hourly and daily forecast experience, charts, forecast risk
 classification, and dangerous-period indicators.
 
+- **9.1 City and range selection** — completed. Added city search, selectable
+  1–14 day ranges, and loading/error/retry states.
+- **9.2 Hourly outlook and risk windows** — completed. Added hourly
+  temperature/apparent-temperature charting, a separate per-hour Heat Index
+  risk strip, and grouped Danger/Extreme Danger periods.
+- **9.3 Daily outlook and responsive layout** — completed. Added daily
+  conditions, date/time handling for provider timestamps, and responsive
+  forecast styles.
+- **9.4 Live verification** — completed. Verified forecast data, city/range
+  selection, pagination, empty danger periods, and mobile layout; lint/build
+  passed.
+
+**Phase 9 — Forecast Module: complete.** The forecast page supports city
+search, 1–14 day ranges, hourly temperature and apparent-temperature charts,
+per-hour Heat Index risk, Danger/Extreme Danger periods, daily conditions, and
+loading/error/retry states. Naive provider timestamps retain their local
+wall-clock values; the API timezone is shown with the forecast.
+
 ## Phase 10 — Interactive Map
 
 Build the Leaflet/OpenStreetMap multi-city risk map, colored markers, popups,
@@ -273,4 +291,5 @@ begin the next step automatically.
 - Phase 6 — Alert Management: **complete**.
 - Phase 7 — React Initialization: **complete**.
 - Phase 8 — Dashboard UI: **complete**.
-- Phases 9–16: **not started**.
+- Phase 9 — Forecast Module: **complete**.
+- Phases 10–16: **not started**.

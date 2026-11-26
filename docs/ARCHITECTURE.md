@@ -3,9 +3,9 @@
 ## Status and scope
 
 This document records the intended architecture and implementation status
-through Phase 8. Backend provider, Heat Index, API, alert, shared frontend
-shell, and live dashboard foundations are implemented; other feature screens
-remain planned until their phases are completed.
+through Phase 9. Backend provider, Heat Index, API, alert, shared frontend
+shell, live dashboard, and forecast screens are implemented; other feature
+screens remain planned until their phases are completed.
 Changes to this design should be reflected here and in `PROJECT_ROADMAP.md`.
 
 HeatWatch is an educational heat-risk monitoring prototype. Its calculated
@@ -69,9 +69,11 @@ separate database server, Node backend, cache, or container layer.
   geocoding results directly and store a city name and coordinates on records.
 - **React frontend** owns navigation, responsive screens, client-side loading
   and error states, visualization, and requests to the configured API base URL.
-  The shared app shell and a live dashboard for city search, current weather,
-  heat risk, forecast, and active alerts are implemented. Forecast, map,
-  history, and dedicated alert screens remain future work.
+  The shared app shell, live dashboard, and dedicated forecast page are
+  implemented. The forecast page renders hourly temperature and apparent
+  temperature trends alongside a separate per-hour Heat Index risk strip,
+  grouped Danger/Extreme Danger periods, and daily conditions. Map, history,
+  and dedicated alert screens remain future work.
   An Axios service reads `VITE_API_BASE_URL` (default `/api/v1`); the Vite
   development server proxies `/api` to the configured backend origin. It does
   not reimplement provider access or treat browser-computed values as
@@ -110,9 +112,10 @@ separate database server, Node backend, cache, or container layer.
    forecast hours. Resolved alerts are deactivated for returned forecast
    periods. The conditional database uniqueness rule and transactional service
    prevent duplicate active alerts for the same city and forecast timestamp.
-7. API responses contain validated, frontend-ready values. The client renders
-   timestamps with their timezone and labels warnings as forecast-based, not
-   official government alerts.
+7. API responses contain validated, frontend-ready values. The client uses
+   the provider timezone and preserves local wall-clock values for timestamps
+   without an explicit offset. Forecast warnings are labeled as indicative,
+   not official government alerts.
 
 The map displays discrete, city-level markers and coordinates. It does not
 interpolate those points or imply spatial coverage that the data does not

@@ -2,9 +2,9 @@
 
 ## Current position
 
-- **Current phase:** Phase 8 — Dashboard UI
-- **Current step:** Phase 8 complete; Phase 9 — Forecast Module is next
-- **Status:** Phases 0–8 complete; awaiting authorization to continue
+- **Current phase:** Phase 9 — Forecast Module
+- **Current step:** Phase 9 complete; Phase 10 — Interactive Map is next
+- **Status:** Phases 0–9 complete
 
 ## Completed
 
@@ -260,6 +260,23 @@
   chart is lazy-loaded to keep it out of the initial JS chunk.
 - **Phase 8 complete:** The dashboard uses existing read APIs only. It does
   not save weather observations or automatically generate alerts.
+- **Phase 9, Steps 9.1–9.3:** Replaced the forecast placeholder with a live
+  forecast page. Added city search, selectable 1–14 day ranges, hourly
+  temperature/apparent-temperature chart, separate per-hour Heat Index risk
+  strip, grouped Danger/Extreme Danger periods, daily conditions, and loading,
+  error, and retry states. Forecast-local timestamps preserve their provider
+  wall-clock values; offset-bearing timestamps are localized using the
+  provider timezone.
+- **Phase 9, Step 9.4:** Verified live New Delhi forecast data, 24 hourly risk
+  entries, five daily rows, and the no-danger-period state. Searched for and
+  selected Mumbai, changed the range to 14 days, advanced to day 2, and
+  confirmed 24 hourly entries and 14 daily rows. At a mobile viewport, the
+  forecast rendered without horizontal overflow or API error. `npm run lint`
+  and `npm run build` passed.
+- **Phase 9 complete:** The chart presents temperature and apparent
+  temperature on a shared Celsius scale; risk categories remain separate and
+  are not plotted on that temperature scale. Forecast data remains
+  informational and read-only.
 
 ## Pending
 
@@ -272,7 +289,8 @@
 - Phase 6: complete (steps 6.1–6.4).
 - Phase 7: complete (steps 7.1–7.3).
 - Phase 8: complete (steps 8.1–8.4).
-- Phases 9–16: not started.
+- Phase 9: complete (steps 9.1–9.4).
+- Phases 10–16: not started.
 
 ## Verification
 
@@ -321,6 +339,10 @@
 - Phase 8: `npm run lint` passed; `npm run build` passed; browser smoke test
   passed against local frontend/backend with live city search, current weather,
   forecast, risk, and empty-alert state.
+- Phase 9: `npm run lint` passed; `npm run build` passed; live browser smoke
+  test verified forecast load, hourly risk strip, daily outlook, city search,
+  14-day selection, 24-hour pagination, empty danger periods, and responsive
+  mobile layout without horizontal overflow.
 - **Checks passed:** Backend directory existence and empty-file checks;
   virtual-environment interpreter and pip checks; installed dependency
   version checks; `pip check`; Django system check; Python syntax compilation;
@@ -347,13 +369,13 @@
   when practical.
 - Architecture is a design baseline; model constraints and API schemas must be
   confirmed when implemented and tested.
-- `backend/.env` now contains a locally generated development-only secret and
+- `backend/.env` contains a locally generated development-only secret and
   `DJANGO_DEBUG=true`; never share or commit it. The `.env.example` template
-  intentionally contains no secret. No Git repository is present to verify
-  ignore behavior with Git tooling.
+  intentionally contains no secret. Git status confirmed the local env file
+  is not included in the Phase 9 changes.
 - The project SQLite database now contains the applied Django and Phase 2
   migrations; it is local and ignored by `.gitignore`.
 
 ## Next recommended action
 
-On the next authorized phase, begin Phase 9 — Forecast Module.
+On the next authorized phase, begin Phase 10 — Interactive Map.

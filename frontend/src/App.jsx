@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import AppLayout from './components/AppLayout.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
+import ForecastPage from './pages/ForecastPage.jsx'
 import PagePlaceholder from './pages/PagePlaceholder.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 
@@ -14,14 +15,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/forecast',
-        element: (
-          <PagePlaceholder
-            eyebrow="Forecast"
-            title="Plan ahead for the heat."
-            description="Hourly and daily forecast insights will appear here."
-            phase="Phase 9"
-          />
-        ),
+        element: <ForecastPage />,
       },
       {
         path: '/map',
