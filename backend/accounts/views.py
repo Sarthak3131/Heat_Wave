@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.middleware.csrf import get_token
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 from rest_framework import status
@@ -23,7 +24,10 @@ class SessionView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        return Response({'user': user_payload(request.user) if request.user.is_authenticated else None})
+        return Response({
+            'user': user_payload(request.user) if request.user.is_authenticated else None,
+            'csrf_token': get_token(request),
+        })
 
 
 @method_decorator(csrf_protect, name='dispatch')
@@ -39,7 +43,10 @@ class LoginView(APIView):
         if not user.is_active:
             return Response({'detail': 'This account is inactive.'}, status=status.HTTP_403_FORBIDDEN)
         login(request, user)
-        return Response({'user': user_payload(user)})
+        return Response({
+            'user': user_payload(user),
+            'csrf_token': get_token(request),
+        })
 
 
 class LogoutView(APIView):

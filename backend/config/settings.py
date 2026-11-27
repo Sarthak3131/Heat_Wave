@@ -51,6 +51,8 @@ if IS_RENDER:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'
+    CSRF_COOKIE_SAMESITE = 'None'
 
 ALLOWED_HOSTS = _environment_list(
     'DJANGO_ALLOWED_HOSTS',
@@ -143,6 +145,19 @@ CORS_ALLOWED_ORIGINS = _environment_list(
     'CORS_ALLOWED_ORIGINS',
     ['http://localhost:5173', 'http://127.0.0.1:5173'],
 )
+if any('*' in origin for origin in CORS_ALLOWED_ORIGINS):
+    raise ImproperlyConfigured(
+        'CORS_ALLOWED_ORIGINS must contain explicit origins, not wildcards.'
+    )
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = _environment_list(
+    'CSRF_TRUSTED_ORIGINS',
+    ['http://localhost:5173', 'http://127.0.0.1:5173'],
+)
+if any('*' in origin for origin in CSRF_TRUSTED_ORIGINS):
+    raise ImproperlyConfigured(
+        'CSRF_TRUSTED_ORIGINS must contain explicit origins, not wildcards.'
+    )
 
 
 # Password validation
