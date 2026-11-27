@@ -11,8 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import re
 from pathlib import Path
 
+import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
@@ -34,16 +36,38 @@ if not SECRET_KEY:
         'Set DJANGO_SECRET_KEY in the environment or backend/.env.'
     )
 
-DEBUG = os.environ.get('DJANGO_DEBUG', 'false').strip().lower() in {
-    '1',
-    'true',
-    'yes',
-    'on',
-}
+RENDER_EXTERNAL_HOSTNAME = os.environ.get(
+    'RENDER_EXTERNAL_HOSTNAME', ''
+).strip().lower()
+IS_RENDER = (
+    os.environ.get('RENDER', '').strip().lower() == 'true'
+    or bool(RENDER_EXTERNAL_HOSTNAME)
+)
+DEBUG = not IS_RENDER and os.environ.get(
+    'DJANGO_DEBUG', 'false'
+).strip().lower() in {'1', 'true', 'yes', 'on'}
+if IS_RENDER:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
 ALLOWED_HOSTS = _environment_list(
     'DJANGO_ALLOWED_HOSTS',
     ['localhost', '127.0.0.1', '[::1]'],
 )
+if RENDER_EXTERNAL_HOSTNAME:
+    hostname_pattern = (
+        r'(?=.{1,253}\Z)'
+        r'[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?'
+        r'(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*'
+    )
+    if not re.fullmatch(hostname_pattern, RENDER_EXTERNAL_HOSTNAME):
+        raise ImproperlyConfigured(
+            'RENDER_EXTERNAL_HOSTNAME must be a valid hostname.'
+        )
+    if RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -72,6 +96,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+if IS_RENDER:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 ROOT_URLCONF = 'config.urls'
 
@@ -96,12 +122,22 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = os.environ.get('DATABASE_URL', '').strip()
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 CORS_ALLOWED_ORIGINS = _environment_list(
     'CORS_ALLOWED_ORIGINS',
@@ -144,6 +180,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': (
+            'whitenoise.storage.CompressedManifestStaticFilesStorage'
+            if IS_RENDER
+            else 'django.contrib.staticfiles.storage.StaticFilesStorage'
+        ),
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
