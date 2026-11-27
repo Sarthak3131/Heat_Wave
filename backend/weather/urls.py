@@ -4,6 +4,7 @@ from .views import (
     CitySearchView,
     CurrentWeatherView,
     ForecastView,
+    WeatherHistoryAnalyticsView,
     WeatherHistoryView,
 )
 
@@ -14,4 +15,5 @@ urlpatterns = [
     path('current/', CurrentWeatherView.as_view(), name='current'),
     path('forecast/', ForecastView.as_view(), name='forecast'),
     path('history/', WeatherHistoryView.as_view(), name='history'),
+    path('history/analytics/', WeatherHistoryAnalyticsView.as_view(), name='history-analytics'),
 ]

@@ -34,3 +34,20 @@ export async function getActiveAlerts(city) {
   })
   return data.results
 }
+
+export async function getAlerts(filters = {}) {
+  const { data } = await api.get('/alerts/', { params: { page_size: 100, ...filters } })
+  return data
+}
+
+export async function getHistoricalRecords(filters = {}) {
+  const { data } = await api.get('/weather/history/', { params: filters })
+  return data
+}
+
+export async function getHistoricalAnalytics(filters = {}) {
+  const { data } = await api.get('/weather/history/analytics/', {
+    params: filters,
+  })
+  return data.summary
+}

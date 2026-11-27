@@ -201,6 +201,100 @@ class WeatherApiTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
 
+    def test_history_filters_by_inclusive_date_range_and_risk_level(self):
+        records = (
+            ('New Delhi', '2026-06-01T23:00:00+00:00', RiskLevel.CAUTION),
+            ('New Delhi', '2026-06-02T12:00:00+00:00', RiskLevel.DANGER),
+            ('Mumbai', '2026-06-02T18:00:00+00:00', RiskLevel.DANGER),
+            ('New Delhi', '2026-06-03T01:00:00+00:00', RiskLevel.DANGER),
+        )
+        for city, timestamp, risk_level in records:
+            WeatherRecord.objects.create(
+                city=city,
+                country='India',
+                latitude=Decimal('28.600000'),
+                longitude=Decimal('77.200000'),
+                temperature_c=Decimal('35.00'),
+                humidity_percent=Decimal('60.00'),
+                heat_index_c=Decimal('42.00'),
+                risk_level=risk_level,
+                recorded_at=datetime.fromisoformat(timestamp),
+            )
+
+        response = self.client.get(
+            reverse('weather:history'),
+            {
+                'city': 'delhi',
+                'start_date': '2026-06-02',
+                'end_date': '2026-06-02',
+                'risk_level': RiskLevel.DANGER,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['count'], 1)
+        self.assertEqual(response.json()['results'][0]['city'], 'New Delhi')
+        self.assertEqual(response.json()['results'][0]['risk_level'], RiskLevel.DANGER)
+
+    def test_history_rejects_invalid_dates_and_risk_level(self):
+        invalid_queries = (
+            {'start_date': 'not-a-date'},
+            {'end_date': '2026-02-30'},
+            {'start_date': '2026-06-03', 'end_date': '2026-06-02'},
+            {'risk_level': 'unsafe'},
+        )
+
+        for query in invalid_queries:
+            with self.subTest(query=query):
+                response = self.client.get(reverse('weather:history'), query)
+                self.assertEqual(response.status_code, 400)
+
+    def test_history_analytics_returns_filtered_summary_and_distribution(self):
+        records = (
+            ('New Delhi', '2026-06-02T12:00:00+00:00', '30.00', '50.00', '31.00', RiskLevel.CAUTION),
+            ('New Delhi', '2026-06-02T14:00:00+00:00', '40.00', '70.00', '48.00', RiskLevel.DANGER),
+            ('Mumbai', '2026-06-02T16:00:00+00:00', '35.00', '60.00', '42.00', RiskLevel.DANGER),
+        )
+        for city, timestamp, temperature, humidity, heat_index, risk_level in records:
+            WeatherRecord.objects.create(
+                city=city,
+                country='India',
+                latitude=Decimal('28.600000'),
+                longitude=Decimal('77.200000'),
+                temperature_c=Decimal(temperature),
+                humidity_percent=Decimal(humidity),
+                heat_index_c=Decimal(heat_index),
+                risk_level=risk_level,
+                recorded_at=datetime.fromisoformat(timestamp),
+            )
+
+        response = self.client.get(
+            reverse('weather:history-analytics'),
+            {'city': 'delhi', 'start_date': '2026-06-02', 'end_date': '2026-06-02'},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        summary = response.json()['summary']
+        self.assertEqual(summary['total_observations'], 2)
+        self.assertEqual(summary['average_temperature_c'], 35.0)
+        self.assertEqual(summary['maximum_temperature_c'], 40.0)
+        self.assertEqual(summary['minimum_temperature_c'], 30.0)
+        self.assertEqual(summary['average_humidity_percent'], 60.0)
+        self.assertEqual(summary['maximum_heat_index_c'], 48.0)
+        self.assertEqual(summary['risk_level_distribution'][RiskLevel.CAUTION], 1)
+        self.assertEqual(summary['risk_level_distribution'][RiskLevel.DANGER], 1)
+        self.assertEqual(summary['risk_level_distribution'][RiskLevel.LOW], 0)
+
+    def test_history_analytics_returns_empty_summary(self):
+        response = self.client.get(reverse('weather:history-analytics'))
+
+        self.assertEqual(response.status_code, 200)
+        summary = response.json()['summary']
+        self.assertEqual(summary['total_observations'], 0)
+        self.assertIsNone(summary['average_temperature_c'])
+        self.assertIsNone(summary['maximum_heat_index_c'])
+        self.assertEqual(summary['risk_level_distribution']['not_applicable'], 0)
+
     def test_history_rejects_invalid_page_size(self):
         for page_size in ('0', '101', 'invalid'):
             with self.subTest(page_size=page_size):
