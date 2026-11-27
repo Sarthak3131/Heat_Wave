@@ -1,15 +1,16 @@
+from django.db.models import Avg, Count, Max, Min
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import WeatherRecord
+from .models import RiskLevel, WeatherRecord
 from .pagination import StandardResultsPagination
 from .serializers import (
-    CityFilterSerializer,
     CitySearchSerializer,
     CoordinateQuerySerializer,
     ForecastQuerySerializer,
+    HistoricalWeatherQuerySerializer,
     WeatherRecordSerializer,
 )
 from .services.heat_index import assess_heat_risk
@@ -42,6 +43,32 @@ def _heat_risk(temperature_c, humidity_percent):
             'recommendation': None,
         }
     return assess_heat_risk(temperature_c, humidity_percent)
+
+
+def _filtered_weather_records(values):
+    records = WeatherRecord.objects.all()
+    city = values.get('city')
+    if city:
+        records = records.filter(city__icontains=city)
+    start_date = values.get('start_date')
+    if start_date:
+        records = records.filter(recorded_at__date__gte=start_date)
+    end_date = values.get('end_date')
+    if end_date:
+        records = records.filter(recorded_at__date__lte=end_date)
+    risk_level = values.get('risk_level')
+    if risk_level:
+        records = records.filter(risk_level=risk_level)
+    return records
+
+
+def _risk_level_distribution(records):
+    distribution = {risk_level: 0 for risk_level in RiskLevel.values}
+    distribution['not_applicable'] = 0
+    for row in records.values('risk_level').annotate(count=Count('id')):
+        key = row['risk_level'] or 'not_applicable'
+        distribution[key] = row['count']
+    return distribution
 
 
 class CitySearchView(APIView):
@@ -126,13 +153,31 @@ class WeatherHistoryView(APIView):
     pagination_class = StandardResultsPagination
 
     def get(self, request):
-        serializer = CityFilterSerializer(data=request.query_params)
+        serializer = HistoricalWeatherQuerySerializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
-        records = WeatherRecord.objects.all()
-        city = serializer.validated_data.get('city')
-        if city:
-            records = records.filter(city__icontains=city)
+        values = serializer.validated_data
+        records = _filtered_weather_records(values)
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(records, request, view=self)
         data = WeatherRecordSerializer(page, many=True).data
         return paginator.get_paginated_response(data)
+
+
+class WeatherHistoryAnalyticsView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def get(self, request):
+        serializer = HistoricalWeatherQuerySerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        records = _filtered_weather_records(serializer.validated_data)
+        summary = records.aggregate(
+            average_temperature_c=Avg('temperature_c'),
+            maximum_temperature_c=Max('temperature_c'),
+            minimum_temperature_c=Min('temperature_c'),
+            average_humidity_percent=Avg('humidity_percent'),
+            maximum_heat_index_c=Max('heat_index_c'),
+            total_observations=Count('id'),
+        )
+        summary['risk_level_distribution'] = _risk_level_distribution(records)
+        return Response({'summary': summary})

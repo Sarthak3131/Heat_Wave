@@ -1,10 +1,19 @@
+import { lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import AppLayout from './components/AppLayout.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
-import ForecastPage from './pages/ForecastPage.jsx'
-import MapPage from './pages/MapPage.jsx'
 import PagePlaceholder from './pages/PagePlaceholder.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
+
+const ForecastPage = lazy(() => import('./pages/ForecastPage.jsx'))
+const MapPage = lazy(() => import('./pages/MapPage.jsx'))
+const HistoricalAnalyticsPage = lazy(() => import('./pages/HistoricalAnalyticsPage.jsx'))
+const AlertsPage = lazy(() => import('./pages/AlertsPage.jsx'))
+const LoginPage = lazy(() => import('./pages/LoginPage.jsx'))
+
+function LazyPage({ children }) {
+  return <Suspense fallback={<div className="page-container dashboard-loading">Loading page…</div>}>{children}</Suspense>
+}
 
 const router = createBrowserRouter([
   {
@@ -16,33 +25,23 @@ const router = createBrowserRouter([
       },
       {
         path: '/forecast',
-        element: <ForecastPage />,
+        element: <LazyPage><ForecastPage /></LazyPage>,
       },
       {
         path: '/map',
-        element: <MapPage />,
+        element: <LazyPage><MapPage /></LazyPage>,
       },
       {
         path: '/history',
-        element: (
-          <PagePlaceholder
-            eyebrow="History"
-            title="Review recorded conditions."
-            description="Weather observations collected by HeatWatch will appear here."
-            phase="Phase 11"
-          />
-        ),
+        element: <LazyPage><HistoricalAnalyticsPage /></LazyPage>,
       },
       {
         path: '/alerts',
-        element: (
-          <PagePlaceholder
-            eyebrow="Alerts"
-            title="Stay informed about forecast risk."
-            description="Active forecast-based heat alerts will appear here."
-            phase="Phase 12"
-          />
-        ),
+        element: <LazyPage><AlertsPage /></LazyPage>,
+      },
+      {
+        path: '/login',
+        element: <LazyPage><LoginPage /></LazyPage>,
       },
       {
         path: '/about',

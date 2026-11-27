@@ -291,6 +291,47 @@ dependency configuration, and production/debug settings.
 Complete setup, API, architecture, database, testing, and limitation
 documentation; provide a final report based only on verified results.
 
+## Phase 11 update
+
+- **11.1 Database audit** — completed by source review. `WeatherRecord`
+  already contains the required location, measurement, Heat Index/risk, and
+  timezone-aware observation fields, with suitable city/time and risk/time
+  indexes. No migration is required. Runtime database verification is blocked
+  in the current workspace because the local SQLite file, backend environment
+  file, and Python launcher are unavailable; see
+  `PHASE_11_ONWARDS_AUDIT.md`.
+- **11.2 Historical API filters** — completed in source. History now accepts
+  optional inclusive `start_date`/`end_date` ISO-date filters and a validated
+  risk-level filter alongside the existing city filter and pagination. Invalid
+  date formats, impossible dates, reversed ranges, and invalid risk values
+  return 400. Focused tests were added but cannot yet run in this workspace.
+- **11.3 Historical analytics calculations** — completed in source. Added the
+  filtered `GET /api/v1/weather/history/analytics/` summary endpoint for the
+  required averages, temperature extremes, maximum Heat Index, observation
+  count, and risk distribution. Empty datasets return truthful null aggregates
+  and zero counts; no data is fabricated.
+
+- **11.4.1 Historical frontend foundation** — completed. Replaced the history
+  placeholder route with an initial Historical Analytics page connected to the
+  stored-record and analytics endpoints. It has loading, refresh, error, and
+  truthful no-data states. Filter controls, metric cards, charts, distribution,
+  table, and pagination remain subsequent small Step 11.4 tasks.
+
+## Phases 11–16 delivery update
+
+- **Phase 11:** Historical filters, summary API, trends, distribution, table,
+  pagination, loading/error/empty states, and backend tests implemented.
+- **Phase 12:** Alert filtering, public active-alert UI, safety guidance, and
+  staff-only active/inactive alert management implemented.
+- **Phase 13:** Django session login/logout/session API, roles migration, and
+  server-side staff permissions implemented.
+- **Phase 14:** Backend integration checks and full tests run; frontend build
+  remains blocked by a corrupted local dependency restore.
+- **Phase 15:** Settings, CORS, secrets, validation, session permissions, and
+  dependencies reviewed. No secrets were added to tracked files.
+- **Phase 16:** README, installation, API, database, testing, architecture, and
+  final-report documents completed.
+
 ## Incremental delivery rule
 
 Complete one phase per user `NEXT` command. After each phase, verify the work,
@@ -310,4 +351,5 @@ the next phase automatically.
 - Phase 8 — Dashboard UI: **complete**.
 - Phase 9 — Forecast Module: **complete**.
 - Phase 10 — Interactive Map: **complete**.
-- Phases 11–16: **not started**.
+- Phase 11 — Historical Analytics: **in progress** (Step 11.1 complete).
+- Phases 12–16: **not started**.

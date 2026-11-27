@@ -8,6 +8,10 @@ shell, live dashboard, forecast, and interactive city map are implemented;
 other feature screens remain planned until their phases are completed.
 Changes to this design should be reflected here and in `PROJECT_ROADMAP.md`.
 
+Phase 11 adds filtered stored-record analytics; Phase 12 adds active-alert UI
+and staff-only alert-management endpoints; Phase 13 adds session authentication
+and built-in user groups. The history and alerts pages are now implemented.
+
 HeatWatch is an educational heat-risk monitoring prototype. Its calculated
 Heat Index, indicative categories, forecasts, and alerts are informational;
 they are not WBGT measurements or official government warnings.

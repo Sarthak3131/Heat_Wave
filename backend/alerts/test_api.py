@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 
 from weather.models import RiskLevel
 
@@ -67,3 +68,30 @@ class ActiveAlertsApiTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 405)
+
+    def test_active_alerts_filter_by_risk_level(self):
+        alert = self.create_alert('New Delhi')
+        response = self.client.get(reverse('alerts:active-list'), {'risk_level': alert.risk_level})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['count'], 1)
+
+    def test_alert_management_requires_staff_and_allows_status_update(self):
+        alert = self.create_alert('New Delhi')
+        user_model = get_user_model()
+        regular_user = user_model.objects.create_user('regular', password='safe-password')
+        staff_user = user_model.objects.create_user('admin', password='safe-password', is_staff=True)
+        management_url = reverse('alerts:management-list')
+
+        self.assertEqual(self.client.get(management_url).status_code, 403)
+        self.client.force_login(regular_user)
+        self.assertEqual(self.client.get(management_url).status_code, 403)
+        self.client.force_login(staff_user)
+        self.assertEqual(self.client.get(management_url, {'status': 'all'}).status_code, 200)
+
+        response = self.client.patch(
+            reverse('alerts:management-detail', args=[alert.pk]),
+            {'is_active': False},
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.json()['is_active'])

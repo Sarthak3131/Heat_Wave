@@ -6,6 +6,7 @@ import {
   Map,
   Menu,
   ThermometerSun,
+  LogIn,
 } from 'lucide-react'
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
@@ -77,6 +78,9 @@ function AppLayout() {
           </nav>
 
           <div className="header-status">
+            <NavLink className="header-login" to="/login" onClick={closeMenu}>
+              <LogIn aria-hidden="true" size={15} /> Sign in
+            </NavLink>
             <span className="status-dot" aria-hidden="true" />
             <span>Educational prototype</span>
           </div>

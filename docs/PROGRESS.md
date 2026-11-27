@@ -396,6 +396,116 @@
 - The project SQLite database now contains the applied Django and Phase 2
   migrations; it is local and ignored by `.gitignore`.
 
+## Phase 11 progress
+
+- **Current phase:** Phase 11 — Historical Analytics.
+- **Current step:** Step 11.1 — Database Audit: complete by source review.
+- **Files created:** `docs/PHASE_11_ONWARDS_AUDIT.md`.
+- **Files modified:** `docs/PROJECT_ROADMAP.md`, `docs/PROGRESS.md`.
+- **Findings:** `WeatherRecord` already stores city/country, coordinates,
+  temperature, humidity, optional apparent temperature/Heat Index/risk, and
+  timezone-aware observation/creation timestamps. Its initial migration and
+  source schema agree; no schema change is needed. Current-weather calls do
+  not persist observations, so an empty historical dataset is expected until
+  the application/admin process collects records.
+- **Tests performed:** repository/source/migration/API-test review passed.
+  Django runtime checks were not executed because `python` is unavailable and
+  `backend/.env` plus `backend/db.sqlite3` are absent in this workspace.
+- **Known issue/blocker:** the missing runtime configuration/database prevents
+  live record-count, migration-status, and test-suite verification.
+- **Next recommended action:** Step 11.2 — add validated date-range and risk
+  filters plus a consistent, paginated historical API response; test it once
+  the backend runtime is available.
+
+## Phase 11, Step 11.2 update
+
+- **Completed:** extended `GET /api/v1/weather/history/` with optional
+  `start_date`, `end_date`, and `risk_level` filters. Date boundaries are
+  inclusive, both dates are ISO `YYYY-MM-DD`, and `end_date` must not precede
+  `start_date`. Existing city filtering, newest-first ordering, pagination,
+  empty responses, and public read-only access remain unchanged.
+- **Files modified:** `backend/weather/serializers.py`,
+  `backend/weather/views.py`, `backend/weather/test_api.py`,
+  `docs/API_DOCUMENTATION.md`, `docs/PROJECT_ROADMAP.md`, and
+  `docs/PROGRESS.md`.
+- **Tests added:** focused API coverage for combined city/date/risk filtering
+  and invalid dates/ranges/risk values.
+- **Tests executed:** none; the Python runtime/configuration/database blocker
+  documented in Step 11.1 remains unresolved.
+- **Next recommended action:** Step 11.3 — implement historical aggregate
+  analytics for the filtered stored records.
+
+## Phase 11, Step 11.3 update
+
+- **Completed:** added `GET /api/v1/weather/history/analytics/`. It applies
+  the same validated city/date/risk filters as the records endpoint and returns
+  average/minimum/maximum temperature, average humidity, maximum Heat Index,
+  total stored observations, and a complete risk-level distribution.
+- **Empty-data behaviour:** empty matches return `null` numeric aggregates,
+  zero total observations, and zero counts for every distribution category.
+  The endpoint does not imply heatwave-day counts or create data.
+- **Files modified:** `backend/weather/views.py`, `backend/weather/urls.py`,
+  `backend/weather/test_api.py`, `docs/API_DOCUMENTATION.md`,
+  `docs/PROJECT_ROADMAP.md`, and `docs/PROGRESS.md`.
+- **Tests added:** filtered aggregate/distribution and empty-summary API tests.
+- **Runtime setup:** renamed the supplied `backend/env` to `backend/.env`, so
+  Django's existing settings loader can now find it. The SQLite file is
+  present. Tests still cannot run because no Python executable or launcher is
+  available in PATH.
+- **Next recommended action:** Step 11.4 — build the Historical Analytics
+  frontend page using these stored-record endpoints.
+
+## Phase 11, Step 11.4.1 update
+
+- **Completed:** replaced the `/history` placeholder with a connected
+  Historical Analytics page foundation. It requests stored records and their
+  aggregate summary, provides refresh/loading/error states, and clearly shows
+  an empty state when HeatWatch has not collected observations.
+- **Files created:** `frontend/src/pages/HistoricalAnalyticsPage.jsx`.
+- **Files modified:** `frontend/src/App.jsx`, `frontend/src/services/weather.js`,
+  `docs/PROJECT_ROADMAP.md`, and `docs/PROGRESS.md`.
+- **Backend verification:** installed Python 3.13.17 and created
+  `backend/.venv` with the pinned dependencies. `pip check`, `manage.py check`,
+  and `makemigrations --check --dry-run` passed; the full Django test suite
+  passed (68 tests).
+- **Frontend verification:** blocked. The checked-in frontend dependency folder
+  is incomplete after restore attempts: Vite/Oxlint launchers are absent, so
+  `npm run lint` and `npm run build` cannot execute. No successful frontend
+  check is claimed.
+- **Next recommended action:** Step 11.4.2 — add historical city/date filters
+  and summary statistic cards, after repairing the frontend dependency install.
+
+## Final delivery update — Phases 11–16
+
+- **Implemented:** historical analytics API/UI; alert filtering/UI; staff-only
+  alert management; Django sessions, roles migration, and login UI; final
+  project documentation.
+- **Backend verification:** `pip check`, Django check, migration consistency,
+  and the complete 73-test suite passed. The roles migration was applied.
+- **Frontend verification blocker:** frontend `node_modules` became corrupted
+  during dependency restoration. Vite/Oxlint launchers are unavailable, so
+  lint/build and browser smoke tests remain pending rather than claimed.
+- **Known limitation:** current weather is not automatically persisted, so
+  history remains empty until authorised data collection occurs. Alerts do not
+  send SMS or email.
+
+## Final verification and quality audit — 27 November 2026
+
+- **AlertsPage quality:** refactored manually compressed JSX into maintainable
+  filter and card components; functionality was preserved.
+- **Bundle quality:** added safe route-level lazy loading for forecast, map,
+  history, alerts, and login. The main bundle is now 391.45 kB and the largest
+  Recharts chunk (409.05 kB) is lazy-loaded; Vite no longer warns about a
+  bundle above 500 kB.
+- **Frontend checks:** `npm run lint` passed with zero warnings; `npm run build`
+  passed.
+- **Backend checks:** `pip check`, Django check, migration consistency, and all
+  73 focused backend tests passed. Permission tests confirm regular/anonymous
+  users cannot access staff-only alert management.
+- **Unperformed:** no live browser console or end-to-end smoke test, because no
+  active local server/browser surface was available during this audit.
+
 ## Next recommended action
 
-On the next authorized phase, begin Phase 11 — Historical Analytics.
+Repair the frontend dependency installation with `npm ci`, then run
+`npm run lint`, `npm run build`, and browser smoke tests before submission.
