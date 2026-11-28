@@ -1,10 +1,11 @@
+from asyncio.log import logger
 from datetime import date, datetime
 from decimal import Decimal
 import math
 from numbers import Real
-
+import logging
 import requests
-
+logger = logging.getLogger(__name__)
 
 GEOCODING_URL = 'https://geocoding-api.open-meteo.com/v1/search'
 FORECAST_URL = 'https://api.open-meteo.com/v1/forecast'
@@ -118,6 +119,11 @@ class OpenMeteoClient:
             ) from exc
 
         if response.status_code == 429 or response.status_code >= 500:
+            logger.warning(
+                "Open-Meteo returned HTTP %s for %s",
+                response.status_code,
+                url,
+            )
             raise WeatherProviderUnavailable(
                 'The weather provider is temporarily unavailable. Please try again.'
             )
